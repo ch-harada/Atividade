@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Menu Principal</title>
+</head>
+<body>
+    <div class="overlay">
+        <div class="title">
+            <h1>MÁRCIO MERCENÁRIO</h1>
+        </div>
+        <div class="menu">
+            <a href="game\index.html">START</a>
+            <a href="">HOW TO PLAY</a>
+            <a href="ceditos/credits.html">CREDITS</a>
+            <a class="exit" onclick="abrirPopup()">EXIT</a>
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <h1>ARE YOU SURE?</h1>
+
+        <div class="botoes">
+            <button id="yes">YES</button>
+            <button id="no" onclick="fecharPopup()">NO</button>
+        </div>
+
+        <p id="mensagem"></p>
+    </div>
+    <div class="fine-screen" id="fineScreen">
+    <h1 id="fineText">FINE...</h1>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background-image:url("../img/mario1.webp");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    font-family:"Press Start 2P",system-ui;
+    overflow:hidden;
+}
+
+.overlay{
+    width:100%;
+    min-height:100vh;
+    background:rgba(0,0,0,0.55);
+    padding-top:20px;
+}
+
+.titulo{
+    text-align:center;
+    color:yellow;
+    font-size:30px;
+    margin-bottom:30px;
+    text-shadow:4px 4px 0 black,8px 8px 0 rgba(0,0,0,0.4);
+    animation:flutuar 2s ease-in-out infinite;
+}
+
+.alunos{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:60px;
+}
+
+.aluno{
+    width:80%;
+    max-width:800px;
+    background:rgba(0,0,0,0.75);
+    border:3px solid yellow;
+    border-radius:20px;
+    padding:20px;
+    color:white;
+    transition:0.3s ease;
+    box-shadow:0 0 15px rgba(255,255,0,0.5);
+}
+
+.aluno:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 25px yellow;
+    }
+
+.aluno h2{
+    color:yellow;
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.aluno p{
+    font-size:10px;
+    margin-bottom:10px;
+    line-height:1.8;
+}
+
+.thanks{
+    text-align:center;
+    margin-top:120px;
+    color:white;
+    font-size:14px;
+    animation:flutuar 2s ease-in-out infinite;
+}
+
+@keyframes flutuar{
+    0%{
+    transform:translateY(0px);
+    }
+
+    50%{
+    transform:translateY(-8px);
+    }
+
+    100%{
+    transform:translateY(0px);
+    }
+}
+
+.goback{
+    text-decoration:none;
+    color:yellow;
+    font-size:28px;
+    padding:20px 40px;
+    border:3px solid transparent;
+    border-radius:15px;
+    transition:0.3s ease;
+    cursor:pointer;
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    margin: 30px auto;
+}
+
+.goback:hover{
+    transform:scale(1.1);
+    border:3px solid yellow;
+    background-color:yellow;
+    box-shadow:0 0 20px yellow;
+    color:white;
+}
+

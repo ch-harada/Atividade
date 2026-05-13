@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    background-image:url("img/mario1.webp");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    font-family:"Press Start 2P",system-ui;
+    overflow:hidden;
+}
+
+.overlay{
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+.title{
+    display:flex;
+    justify-content:center;
+    padding-top:70px;
+}
+
+.title h1{
+    color:rgb(255,238,0);
+    font-size:55px;
+    text-shadow:4px 4px 0 black,8px 8px 0 rgba(0,0,0,1);
+    animation:flutuar 1s ease-in-out infinite;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:30px;
+    margin-top:120px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:yellow;
+    font-size:28px;
+    padding:20px 40px;
+    border:3px solid transparent;
+    border-radius:15px;
+    transition:0.3s ease;
+    cursor:pointer;
+}
+
+.menu a:not(.exit):hover{
+    transform:scale(1.1);
+    border:3px solid yellow;
+    background-color:yellow;
+    box-shadow:0 0 20px yellow;
+    color:white;
+}
+
+.exit{
+    color:white;
+    font-size:20px;
+    background-color:red;
+    border:3px solid red;
+    border-radius:30px;
+    padding:18px 35px;
+}
+
+.exit:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 20px red;
+    background-color:rgb(255,40,40);
+}
+
+.popup{
+    width:600px;
+    padding:40px;
+    background:rgba(0,0,0,0.95);
+    border:4px solid yellow;
+    border-radius:20px;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:40px;
+    box-shadow:0 0 30px yellow;
+    z-index:999;
+}
+
+.popup h1{
+    color:yellow;
+    font-size:22px;
+    text-align:center;
+}
+
+.botoes{
+    display:flex;
+    gap:60px;
+    position:relative;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+    height:150px;
+}
+
+#yes{
+    position:absolute;
+    padding:15px 30px;
+    background:red;
+    color:white;
+    border:none;
+    border-radius:15px;
+    font-family:"Press Start 2P",system-ui;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+#no{
+    padding:15px 30px;
+    background:green;
+    color:white;
+    border:none;
+    border-radius:15px;
+    font-family:"Press Start 2P",system-ui;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+#no:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 15px lime;
+}
+
+#mensagem{
+    color:white;
+    font-size:12px;
+    text-align:center;
+}
+
+@keyframes flutuar{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+.fine-screen{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:black;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+}
+
+.fine-screen h1{
+    color:white;
+    font-size:40px;
+    font-family:"Press Start 2P",system-ui;
+
+    animation:sumir 3s forwards;
+}
+
+@keyframes sumir{
+
+    0%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+    }
