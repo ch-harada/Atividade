@@ -15,6 +15,13 @@ const canoL = 95;
 let cameraX = 0;
 //level atual, nao fiz mta coisa com isso ainda
 var levelatual = 1;
+//placar de pontuação
+let pontos = 0;
+
+let ultimoLado = "right";
+let tiros = [];
+let podeAtirar = true;
+const cooldownTiro = 500;
 
 // LEVELS (background, obstáculos, largura e altura do level)
 const levels = {
@@ -25,8 +32,6 @@ const levels = {
         height: 1270,
         chao: 600,
         obstacles: [
-
-
             //chão inicial
             {
                 x: 0,
@@ -442,12 +447,33 @@ const levels = {
                 width: blocoL,
                 height: blocoA
             },  
-
-            
-            
-            
-
         ],
+        
+
+        enemies: [
+            {
+                x: 500,
+                y: 500,
+                spawnX: 500,
+                spawnY: 500,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 1200,
+                y: 500,
+                spawnX: 1200,
+                spawnY: 500,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: -1
+            }
+        ],
+        
 
     },
     //Adivinha? aqui é pra ser o level 2 animal, por enquanto não tem nada
@@ -459,7 +485,6 @@ const levels = {
         height: 600,
 
         obstacles: [
-
             {
                 x: 0,
                 y: 500,
@@ -499,6 +524,8 @@ let levelWidth = currentLevel.width;
 let levelHeight = currentLevel.height;
 let vidas = 3
 let levelChao = currentLevel.chao
+let enemies = currentLevel.enemies;
+
 
 const background = new Image();
 //pega o level atual e coloca a background definida nele
@@ -511,10 +538,91 @@ let player = {
     y: 300,
     width: 50,
     height: 50,
-    velX: 5,
+    velX: 3,
     velY: 0,
     noChao: false
 };
+
+
+function atirar() {
+    let speedX = 10;
+    if (ultimoLado == "left") {
+        speedX = -10;
+    }
+    tiros.push({
+        x: player.x + cameraX + player.width / 2,
+        y: player.y + player.height / 2,
+        width: 12,
+        height: 6,
+        speedX: speedX
+    });
+}
+
+function atualizarTiros() {
+    for (let i = tiros.length - 1; i >= 0; i--) {
+        let tiro = tiros[i];
+        tiro.x += tiro.speedX;
+        let screenX = tiro.x - cameraX;
+        // remove if outside screen
+        if (
+            screenX < -50 ||
+            screenX > canvas.width + 50
+        ) {
+            tiros.splice(i, 1);
+        }
+    }
+}
+
+function desenharTiros() {
+    ctx.fillStyle = "yellow";
+    for (const tiro of tiros) {
+        ctx.fillRect(
+            tiro.x - cameraX,
+            tiro.y,
+            tiro.width,
+            tiro.height
+        );
+    }
+}
+
+function desenharEnemies() {
+    ctx.fillStyle = "green";
+    for (const enemy of enemies) {
+        ctx.fillRect(
+            enemy.x - cameraX,
+            enemy.y,
+            enemy.width,
+            enemy.height
+        );
+    }
+}
+
+function atualizarEnemies() {
+    for (const enemy of enemies) {
+        let screenX = enemy.x - cameraX;
+        let minX = enemy.spawnX;
+        let maxX = enemy.spawnX + 100;
+        // only update near screen
+        if (
+            screenX > -200 &&
+            screenX < canvas.width + 200
+        ) {
+
+            // move
+            enemy.x += enemy.velX * enemy.direction;
+
+            // hit right limit
+            if (enemy.x >= maxX) {
+                enemy.direction = -1;
+            }
+
+            // hit left limit
+            if (enemy.x <= minX) {
+                enemy.direction = 1;
+            }
+        }
+    }
+}
 
 
 // CHANGE LEVEL, ATUALIZA AS VARIÁVEIS DO LEVEL, OBSTÁCULOS, BACKGROUND, POSIÇÃO DO PLAYER E CAMERA
@@ -522,6 +630,7 @@ function carregarLevel(numero) {
     levelatual = numero;
     currentLevel = levels[levelatual];
     obstacles = currentLevel.obstacles;
+    enemies = currentLevel.enemies;
     morte = currentLevel.morte;
     levelWidth = currentLevel.width;
     levelHeight = currentLevel.height;
@@ -545,6 +654,11 @@ function morrer() {
     player.velY = 0;
     // reseta câmera
     cameraX = 0;
+    //enemies
+    for (const enemy of enemies) {
+        enemy.x = enemy.spawnX;
+        enemy.y = enemy.spawnY
+    }
     // evita bug de pulo
     player.noChao = false;
     // game over
@@ -611,6 +725,62 @@ function colisao(px, py) {
     return null;
 }
 
+function colisaoEnemy(px, py) {
+    for (const enemy of enemies) {
+        if (
+            px < enemy.x + enemy.width &&
+            px + player.width > enemy.x &&
+            py < enemy.y + enemy.height &&
+            py + player.height > enemy.y
+        ) {
+            return enemy;
+        }
+    }
+    return null;
+}
+
+function colisaoTiroEnemy() {
+    for (let i = tiros.length - 1; i >= 0; i--) {
+        let tiro = tiros[i];
+        for (let j = enemies.length - 1; j >= 0; j--) {
+            let enemy = enemies[j];
+            if (
+                tiro.x < enemy.x + enemy.width &&
+                tiro.x + tiro.width > enemy.x &&
+                tiro.y < enemy.y + enemy.height &&
+                tiro.y + tiro.height > enemy.y
+            ) {
+                // remove bullet
+                tiros.splice(i, 1);
+                // remove enemy
+                enemies.splice(j, 1);
+                // stop checking this bullet
+                break;
+            }
+        }
+    }
+}
+
+
+function colisaoTiroObstacle() {
+    for (let i = tiros.length - 1; i >= 0; i--) {
+        let tiro = tiros[i];
+        for (let j = obstacles.length - 1; j >= 0; j--) {
+            let obstacle = obstacles[j];
+            if (
+                tiro.x < obstacle.x + obstacle.width &&
+                tiro.x + tiro.width > obstacle.x &&
+                tiro.y < obstacle.y + obstacle.height &&
+                tiro.y + tiro.height > obstacle.y
+            ) {
+                // remove o tiro splice tira o objeto do array
+                tiros.splice(i, 1);
+                // break
+                break;
+            }
+        }
+    }
+}
 
 // UPDATE de posição do player, camera e colisão
 function atualizar() {
@@ -620,12 +790,17 @@ function atualizar() {
     let worldX = player.x + cameraX;
     let novoWorldX = worldX;
 
+    pontuacao = 0;
+
+
     // MOVIMENTO altera o valor do novoWorldX 
     if (keys["ArrowRight"]) {
         novoWorldX += player.velX;
+        ultimoLado = "right";
     }
     if (keys["ArrowLeft"]) {
         novoWorldX -= player.velX;
+        ultimoLado = "left";
     }
 
     // COLISÃO HORIZONTAL (nao deixa o player sair dos 230 pixeis pro background e o movimento ficarem dinamicos juntos)
@@ -688,7 +863,12 @@ function atualizar() {
         player.x = canvas.width - player.width;
     }
 
-    if (player.y > levelChao){
+    let enemies = colisaoEnemy(
+        player.x + cameraX,
+        player.y
+    );
+
+    if (player.y > levelChao || enemies) {
         morrer()
     }
 
@@ -703,6 +883,17 @@ function atualizar() {
     //}
 }
 
+function desenharHUD() {
+    ctx.fillStyle = "white";
+    ctx.font = "25px Comic Sans MS";
+
+    // score
+    ctx.fillText("Pontuação: " + pontuacao, 20, 40);
+
+    // lives
+    ctx.fillText("Vidas: " + vidas, 20, 80);
+}
+
 // LOOP do game para constantemente atualizar posições, background, obstáculos e tudo mais
 function desenhar() {
     // LIMPAR TELA
@@ -713,6 +904,18 @@ function desenhar() {
     //hitbox dos obstáculos
     //desenharObstaculos();
     desenharPlayer();
+    atualizarTiros();
+    colisaoTiroEnemy();
+    colisaoTiroObstacle();
+    //desenha hud
+    desenharHUD();
+    //atualizar inimigo
+    atualizarEnemies();
+    desenharEnemies();
+    desenharTiros();
+
+  
+
     requestAnimationFrame(desenhar);
 }
 
@@ -720,6 +923,15 @@ function desenhar() {
 // INPUT recebe as teclas e armazena em keys enquanto estiver pressionada
 document.addEventListener("keydown", function(evento) {
     keys[evento.key] = true;
+
+    if (evento.key == "z" && podeAtirar){
+        atirar();
+        podeAtirar = false;
+        
+        setTimeout(function() {
+            podeAtirar = true;
+        }, cooldownTiro);
+    }
 });
 // se nao tiver pressionada né animal
 document.addEventListener("keyup", function(evento) {

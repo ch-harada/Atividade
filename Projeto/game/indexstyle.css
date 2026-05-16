@@ -3,6 +3,7 @@ body{
     justify-content: center;
     align-items: center;
     margin-top: 30px;
+    background-color: black;
 }
 canvas{
     background-color: grey;
