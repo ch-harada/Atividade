@@ -6,17 +6,20 @@ const pulo = -14;
 //armazena as teclas pressionadas, mto bolado pra movimentação fluida tlg
 const keys = {};
 
-//tamanho dos blocos
-const blocoL = 48;
-const blocoA = 45;
 //largura do cano
 const canoL = 95;
 //posição x da camera
 let cameraX = 0;
 //level atual, nao fiz mta coisa com isso ainda
 var levelatual = 1;
+let faseMaxima= 1;
 //placar de pontuação
-let pontos = 0;
+let pontuacao = 0;
+
+let blocoL = 48;
+let blocoA = 45;
+
+let invulneravel = false;
 
 let ultimoLado = "right";
 let tiros = [];
@@ -27,10 +30,16 @@ const cooldownTiro = 500;
 const levels = {
     //1 de Level 1 né burrão
     1: {
-        background: "NES - Super Mario Bros. - Stages - World 1-1.png",
+        background: "level1-1.png",
         width: 10000,
         height: 1270,
-        chao: 600,
+        chao: 600, 
+        final: {
+            x: 400,
+            y: 480,
+            width: 50,
+            height: 60,
+        },
         obstacles: [
             //chão inicial
             {
@@ -450,7 +459,7 @@ const levels = {
         ],
         
 
-        enemies: [
+        inimigosOriginais: [
             {
                 x: 500,
                 y: 500,
@@ -479,38 +488,386 @@ const levels = {
     //Adivinha? aqui é pra ser o level 2 animal, por enquanto não tem nada
     2: {
 
-        background: "level2.png",
-
-        width: 8000,
-        height: 600,
+        background: "level2-2.png",
+        width: 19500,
+        height: 1140,
+        chao: 600,
+        final:{
+            x: 500,
+            //x: 19140,
+            y: 460,
+            width: 60,
+            height: 80,
+        },
 
         obstacles: [
             {
                 x: 0,
-                y: 500,
-                width: 8000,
-                height: 1
+                y: 547,
+                width: 2305,
+                height: 100,
             },
-
             {
-                x: 300,
-                y: 350,
+                x: 2355,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 2455,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 2605,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 2757,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 2907,
+                y: 547,
+                width: 5565,
+                height: 100,
+            },
+            {
+                x: 8522,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 8622,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 8772,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 8872,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 9022,
+                y: 547,
+                width: 855,
+                height: 100,
+            },
+            {
+                x: 9925,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 10025,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 10125,
+                y: 547,
+                width: 955,
+                height: 100,
+            },
+            {
+                x: 11175,
+                y: 547,
+                width: 120,
+                height: 100,
+            },
+            {
+                x: 11375,
+                y: 547,
+                width: 505,
+                height: 100,
+            },
+            {
+                x: 11930,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 12130,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 12330,
+                y: 547,
+                width: 2205,
+                height: 100,
+            },
+            {
+                x: 14685,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
+                x: 14940,
+                y: 547,
+                width: 800,
+                height: 100,
+            },
+            {
+                x: 15990,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 16240,
+                y: 547,
+                width: 1755,
+                height: 100,
+            },
+            {
+                x: 18045,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 18145,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 18245,
+                y: 547,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 18345,
+                y: 547,
+                width: 1155,
+                height: 100,
+            },
+            {
+                x: 18850,
+                y: 505,
+                width: 50,
+                height: 50,
+            },
+            //cano
+            {
+                x: 1755,
+                y: 378,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 3810,
+                y: 378,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 4110,
+                y: 418,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 4710,
+                y: 378,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 5213,
+                y: 378,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 5765,
+                y: 460,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 7018,
+                y: 418,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 11930,
+                y: 420,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 12130,
+                y: 378,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 12333,
+                y: 336,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 17245,
+                y: 418,
+                width: 100,
+                height: 185,
+            },
+            {
+                x: 17795,
+                y: 460,
+                width: 100,
+                height: 185,
+            },
+            
+
+            //blocos
+            {
+                x: 7670,
+                y: 380,
+                width: 50,
+                height: 200,
+            },
+            {
+                x: 7720,
+                y: 210,
+                width: 400,
+                height: 50,
+            },
+            {
+                x: 8170,
+                y: 380,
+                width: 50,
+                height: 200,
+            },
+            {
+                x: 9225,
+                y: 335,
+                width: 400,
+                height: 40,
+            },
+            {
+                x: 10527,
+                y: 460,
+                width: 50,
+                height: 80,
+            },
+            {
+                x: 13785,
+                y: 505,
+                width: 300,
+                height: 40,
+            },
+            {
+                x: 13835,
+                y: 460,
+                width: 250,
+                height: 40,
+            },
+            {
+                x: 13885,
+                y: 420,
                 width: 200,
-                height: 20
+                height: 40,
             },
-
             {
-                x: 700,
-                y: 280,
+                x: 13935,
+                y: 380,
                 width: 150,
-                height: 20
+                height: 40,
+            },
+            {
+                x: 13985,
+                y: 337,
+                width: 100,
+                height: 40,
+            },
+            {
+                x: 14035,
+                y: 295,
+                width: 50,
+                height: 40,
+            },
+            {
+                x: 15188,
+                y: 462,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 15390,
+                y: 462,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 18045,
+                y: 462,
+                width: 50,
+                height: 100,
+            },
+            {
+                x: 18147,
+                y: 377,
+                width: 50,
+                height: 200,
+            },
+            {
+                x: 18247,
+                y: 290,
+                width: 50,
+                height: 260,
+            },
+            {
+                x: 18347,
+                y: 210,
+                width: 50,
+                height: 340,
+            },
+            {
+                x: 18397,
+                y: 210,
+                width: 50,
+                height: 340,
             },
 
+
+
+        ],
+
+        inimigosOriginais: [
             {
                 x: 1200,
-                y: 180,
-                width: 100,
-                height: 20
+                y: 300,
+                spawnX: 1200,
+                spawnY: 500,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: -1
             }
         ]
     }
@@ -524,7 +881,8 @@ let levelWidth = currentLevel.width;
 let levelHeight = currentLevel.height;
 let vidas = 3
 let levelChao = currentLevel.chao
-let enemies = currentLevel.enemies;
+let enemies = currentLevel.inimigosOriginais
+
 
 
 const background = new Image();
@@ -630,10 +988,11 @@ function carregarLevel(numero) {
     levelatual = numero;
     currentLevel = levels[levelatual];
     obstacles = currentLevel.obstacles;
-    enemies = currentLevel.enemies;
+    enemies = structuredClone(currentLevel.inimigosOriginais);
     morte = currentLevel.morte;
     levelWidth = currentLevel.width;
     levelHeight = currentLevel.height;
+    levelChao = currentLevel.chao;
     background.src = currentLevel.background;
     cameraX = 0;
     player.x = 50;
@@ -643,33 +1002,64 @@ function carregarLevel(numero) {
 
 
 
-function morrer() {
-    vidas--;
-    console.log("Vidas restantes:", vidas);
-    // volta player pro início
+function resetarJogo() {
+    // volta pro level 1
+    levelatual = 1;
+    faseMaxima = 1;
+    // reseta score e vidas
+    pontuacao = 0;
+    vidas = 3;
+    // limpa tiros
+    tiros = [];
+    // carrega level inicial
+    carregarLevel(1);
+    // reseta enemies
+    enemies = structuredClone(currentLevel.inimigosOriginais);;
+    // player
     player.x = 50;
     player.y = 300;
-    // reseta velocidades
-    player.velX = 5;
+    player.velX = 3;
     player.velY = 0;
-    // reseta câmera
-    cameraX = 0;
-    //enemies
-    for (const enemy of enemies) {
-        enemy.x = enemy.spawnX;
-        enemy.y = enemy.spawnY
-    }
-    // evita bug de pulo
     player.noChao = false;
-    // game over
+    // câmera
+    cameraX = 0;
+    // fecha mapa se estiver aberto
+    miniMapa.fecharMapa();
+}
+
+
+function morrer() {
+
+    if (invulneravel) return;
+
+    invulneravel = true;
+
+    vidas--;
+
+    console.log("Vidas restantes:", vidas);
+
+    player.x = 50;
+    player.y = 300;
+
+    player.velX = 3;
+    player.velY = 0;
+
+    cameraX = 0;
+
+    tiros = [];
+
+    enemies = structuredClone(currentLevel.inimigosOriginais);
+
+    player.noChao = false;
+
     if (vidas <= 0) {
-        alert("GAME OVER");
-        vidas = 3;
-        // reinicia tudo
-        player.x = 50;
-        player.y = 300;
-        cameraX = 0;
+        resetarJogo();
+        return;
     }
+
+    setTimeout(() => {
+        invulneravel = false;
+    }, 1000);
 }
 
 // DESENHAR background, o x do background é o negativo da cameraX pra criar o efeito de movimento do player e da camera juntos, 
@@ -709,6 +1099,19 @@ function desenharObstaculos() {
         );
     }
 }
+
+//desenhar hitbox do final debug
+function desenharFinal() {
+    let final = currentLevel.final;
+    ctx.fillStyle = "purple";
+    ctx.fillRect(
+        final.x - cameraX,
+        final.y,
+        final.width,
+        final.height
+    );
+}
+
 
 // COLISÃO bolada, checka se o player colidiu com algum obstáculo, se sim, retorna o obstáculo, se não, retorna null
 function colisao(px, py) {
@@ -754,6 +1157,8 @@ function colisaoTiroEnemy() {
                 tiros.splice(i, 1);
                 // remove enemy
                 enemies.splice(j, 1);
+                //pontos
+                pontuacao += 10;
                 // stop checking this bullet
                 break;
             }
@@ -782,15 +1187,169 @@ function colisaoTiroObstacle() {
     }
 }
 
+function colisaoFinal() {
+    let final = currentLevel.final;
+    if (
+        player.x + cameraX < final.x + final.width &&
+        player.x + cameraX + player.width > final.x &&
+        player.y < final.y + final.height &&
+        player.y + player.height > final.y
+    ) {
+        return true;
+    }
+    return false;
+}
+
+//mapa
+function criarMiniMapa(ctx, canvas){
+    // =========================
+    // VARIÁVEIS
+    // =========================
+    let mapaAberto = false;
+    let faseSelecionada = 0;
+    const fases = [
+        { x: 90, y: 290 },
+        { x: 295, y: 290 },
+        { x: 500, y: 290 }
+    ];
+    let quadradoX = fases[0].x;
+    let quadradoY = fases[0].y;
+    let destinoX = fases[0].x;
+    let destinoY = fases[0].y;
+    // menor = mais suave
+    // maior = mais rápido
+    const velocidadeMapa = 0.03;
+    let movendoNoMapa = false;
+    const imagemMapa = new Image();
+    imagemMapa.src = "minimapa.png";
+
+
+    // =========================
+    // CONTROLES
+    // =========================
+
+
+    document.addEventListener("keydown", (e) => {
+
+        if(!mapaAberto) return;
+        if(movendoNoMapa) return;
+        // esquerda
+        if((e.key === "a" || e.key === "A") && faseSelecionada > 0){
+            faseSelecionada--;
+            destinoX = fases[faseSelecionada].x;
+            destinoY = fases[faseSelecionada].y;
+            movendoNoMapa = true;
+        }
+
+        // direita
+        if ((e.key === "d" || e.key === "D") && faseSelecionada < 2 && faseSelecionada + 2 <= faseMaxima) {
+            faseSelecionada++;
+            destinoX = fases[faseSelecionada].x;
+            destinoY = fases[faseSelecionada].y;
+            movendoNoMapa = true;
+        }
+        // entrar na fase
+        if(e.key === "Enter"){
+            iniciarFase(faseSelecionada + 1);
+        }
+        });
+
+
+    // =========================
+    // MOVIMENTO
+    // =========================
+
+    function updateMapa(){
+
+        // pega a distância entre o quadrado e o destino
+        // e move apenas uma parte dela por frame
+        // se estiver longe anda rápido
+        // se estiver perto desacelera sozinho
+        quadradoX += (destinoX - quadradoX) * velocidadeMapa;
+        quadradoY += (destinoY - quadradoY) * velocidadeMapa;
+        if(
+            // Math.abs remove números negativos
+            // ajuda a medir a distância real
+            Math.abs(quadradoX - destinoX) < 1 &&
+            Math.abs(quadradoY - destinoY) < 1
+        ){
+            quadradoX = destinoX;
+            quadradoY = destinoY;
+            movendoNoMapa = false;
+        }
+    }
+
+
+    // =========================
+    // MOSTRAR MAPA
+    // =========================
+
+    function desenharMapa(){
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+            imagemMapa,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+        ctx.fillStyle = "blue";
+        ctx.fillRect(
+            quadradoX,
+            quadradoY,
+            player.width * 0.8,
+            player.height * 0.8
+        );
+        ctx.fillStyle = "white";
+        ctx.font = "28px Arial";
+        ctx.fillText(
+            "A/D = mover | ENTER = selecionar fase",
+            300,
+            660
+        );
+    }
+
+    // =========================
+    // FUNÇÕES 
+    // =========================
+
+    function abrirMapa(){
+        mapaAberto = true;
+    }
+    function fecharMapa(){
+        mapaAberto = false;
+    }
+    function iniciarFase(numeroDaFase){
+        console.log("Entrando na fase " + numeroDaFase);
+
+        fecharMapa();
+
+        carregarLevel(numeroDaFase);
+    }
+    return {
+        abrirMapa,
+        fecharMapa,
+        iniciarFase,
+        updateMapa,
+        desenharMapa,
+
+        get aberto() {
+            return mapaAberto;
+        }
+    };
+};
+const miniMapa = criarMiniMapa(ctx, canvas);
+
+
 // UPDATE de posição do player, camera e colisão
 function atualizar() {
     //let do valor da distancia do mundo (direita pra esquerda) é igual ao x do player mais a camera(630px horizontais)
     //  e o novo valor do mundo é igual a esse valor, depois o movimento vai alterar esse valor do mundo e depois o player
     //  ou a camera vão se mover de acordo com a diferença entre o novo valor do mundo e o valor antigo do mundo
+    if (miniMapa.aberto) return;
     let worldX = player.x + cameraX;
     let novoWorldX = worldX;
-
-    pontuacao = 0;
 
 
     // MOVIMENTO altera o valor do novoWorldX 
@@ -863,24 +1422,27 @@ function atualizar() {
         player.x = canvas.width - player.width;
     }
 
-    let enemies = colisaoEnemy(
+    let enemyHit = colisaoEnemy(
         player.x + cameraX,
         player.y
     );
 
-    if (player.y > levelChao || enemies) {
-        morrer()
+    if (player.y > levelChao || (!invulneravel && enemyHit)) {
+        morrer();
     }
 
     // TROCAR LEVEL - MUDAR, ( MATAR ZOMBIES DROPA MOEDA? TIROTEIO INSANO! )
+    //COLOCAR PRA CHAMAR O MAPA AQUI E DAI VC CARREGA O LEVEL 2 DEPOIS
+    if (colisaoFinal() && !miniMapa.aberto) {
 
- //   if (cameraX >= levelWidth - canvas.width - 10) {
-//
-  //      if (levelatual == 1) {
+        // desbloqueia próxima fase
+        if (levelatual + 1 > faseMaxima) {
+            faseMaxima = levelatual + 1;
+        }
 
-    //        carregarLevel(2);
-      //  }
-    //}
+        miniMapa.abrirMapa();
+        return;
+    }
 }
 
 function desenharHUD() {
@@ -896,26 +1458,34 @@ function desenharHUD() {
 
 // LOOP do game para constantemente atualizar posições, background, obstáculos e tudo mais
 function desenhar() {
-    // LIMPAR TELA
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //chama as funções, É SÓ LER ELAS
-    atualizar();
-    desenharBackground();
-    //hitbox dos obstáculos
-    //desenharObstaculos();
-    desenharPlayer();
-    atualizarTiros();
-    colisaoTiroEnemy();
-    colisaoTiroObstacle();
-    //desenha hud
-    desenharHUD();
-    //atualizar inimigo
-    atualizarEnemies();
-    desenharEnemies();
-    desenharTiros();
 
-  
+    if (miniMapa.aberto) {
 
+        miniMapa.updateMapa();
+        miniMapa.desenharMapa();
+
+    } else {
+
+        atualizar();
+
+        desenharBackground();
+        desenharObstaculos();
+        desenharPlayer();
+
+        atualizarTiros();
+        colisaoTiroEnemy();
+        colisaoTiroObstacle();
+
+        desenharHUD();
+
+        atualizarEnemies();
+        desenharEnemies();
+
+        desenharTiros();
+        desenharFinal();
+    }
     requestAnimationFrame(desenhar);
 }
 
@@ -954,5 +1524,7 @@ document.addEventListener("keydown", function(evento) {
 // chama o loop do game pra iniciar tudo, é só ler a função desenhar que tem tudo explicado lá BUCETA
 
 desenhar();
+
+
 
 // caralho lek achei que o dantas tava chapando em ter 1000+ linhas essa porra aq vai ficar gigantesca >:(
