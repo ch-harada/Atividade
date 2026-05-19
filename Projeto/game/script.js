@@ -26,6 +26,14 @@ let tiros = [];
 let podeAtirar = true;
 const cooldownTiro = 500;
 
+const enemySprites = {
+    walk1: new Image(),
+    walk2: new Image(),
+};
+
+enemySprites.walk1.src = "zrun1.png";
+enemySprites.walk2.src = "zrun1.5.png";
+
 // LEVELS (background, obstáculos, largura e altura do level)
 const levels = {
     //1 de Level 1 né burrão
@@ -35,7 +43,7 @@ const levels = {
         height: 1270,
         chao: 600, 
         final: {
-            x: 400,
+            x: 600,
             y: 480,
             width: 50,
             height: 60,
@@ -479,7 +487,7 @@ const levels = {
                 width: 40,
                 height: 40,
                 velX: 1,
-                direction: -1
+                direction: -1,
             }
         ],
         
@@ -867,7 +875,7 @@ const levels = {
                 width: 40,
                 height: 40,
                 velX: 1,
-                direction: -1
+                direction: -1,
             }
         ]
     }
@@ -881,7 +889,14 @@ let levelWidth = currentLevel.width;
 let levelHeight = currentLevel.height;
 let vidas = 3
 let levelChao = currentLevel.chao
-let enemies = currentLevel.inimigosOriginais
+let enemies = structuredClone(currentLevel.inimigosOriginais);
+
+for (const enemy of enemies) {
+    enemy.frameTimer = 0;
+    enemy.frameAtual = 0;
+    enemy.currentSprite = enemySprites.walk1;
+}
+
 
 
 
@@ -891,15 +906,45 @@ background.src = currentLevel.background;
 
 
 // PLAYER BOLADÃO QUE VAI SALTAR, CORRER, (quem sabe atirar) ATÉ O FIM DO MAPA, mas só se for boladão quem tiver controlando ele tbm
+
+const playerSprites = {
+    idle: new Image(),
+    jump: new Image(),
+    run1: new Image(),
+    run2: new Image(),
+};
+
+// paths
+playerSprites.idle.src = "idle.png";
+playerSprites.jump.src = "jump.png";
+playerSprites.run1.src = "run1.png";
+playerSprites.run2.src = "run1.5.png";
+
+
+
+let currentSprite = playerSprites.idle;
+let frameTimer = 0;
+let frameAtual = 0;
+const runFrames = [
+    playerSprites.run1,
+    playerSprites.run2,
+];
+
 let player = {
     x: 50,
     y: 300,
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 55,
+
+    renderwidth: 150,
+    renderheight: 150,
+
     velX: 3,
     velY: 0,
     noChao: false
 };
+
+
 
 
 function atirar() {
@@ -943,7 +988,7 @@ function desenharTiros() {
     }
 }
 
-function desenharEnemies() {
+function desenharEnemiesHitbox() {
     ctx.fillStyle = "green";
     for (const enemy of enemies) {
         ctx.fillRect(
@@ -952,6 +997,53 @@ function desenharEnemies() {
             enemy.width,
             enemy.height
         );
+    }
+}
+
+function desenharEnemies() {
+
+    for (const enemy of enemies) {
+
+        // animação
+        enemy.frameTimer++;
+        if (enemy.frameTimer > 15) {
+            enemy.frameAtual =
+                (enemy.frameAtual + 1) % 2;
+
+            enemy.frameTimer = 0;
+        }
+
+        // troca sprite
+        if (enemy.frameAtual === 0) {
+            enemy.currentSprite = enemySprites.walk1;
+        } else {
+            enemy.currentSprite = enemySprites.walk2;
+        }
+
+        ctx.save();
+
+        // virar sprite
+        if (enemy.direction === -1) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(
+                enemy.currentSprite,
+                -(enemy.x - cameraX) - enemy.width - 30,
+                enemy.y - 30,
+                110,
+                110
+            );
+
+        } else {
+
+            ctx.drawImage(
+                enemy.currentSprite,
+                enemy.x - cameraX - 30,
+                enemy.y - 30,
+                110,
+                110
+            );
+        }
+        ctx.restore();
     }
 }
 
@@ -1009,6 +1101,7 @@ function resetarJogo() {
     // reseta score e vidas
     pontuacao = 0;
     vidas = 3;
+    invulneravel = false;
     // limpa tiros
     tiros = [];
     // carrega level inicial
@@ -1074,15 +1167,69 @@ function desenharBackground() {
         levelHeight
     );
 }
+
+
 // DESENHAR HITBOX DO PLAYER, DEBUG
-function desenharPlayer() {
+function desenharPlayerHitbox() { 
     ctx.fillStyle = "blue";
-    ctx.fillRect(
-        player.x,
-        player.y,
-        player.width,
-        player.height
-    );
+    ctx.fillRect( 
+        player.x, 
+        player.y, 
+        player.width, 
+        player.height 
+    ); 
+}
+
+function desenharPlayer() {
+
+    let offsetX = -44;
+
+    // =========================
+    // ESCOLHER SPRITE
+    // =========================
+
+    if (!player.noChao) {
+        currentSprite = playerSprites.jump;
+        offsetX = -60;
+
+    } else if (keys["ArrowRight"] || keys["ArrowLeft"]) {
+
+        frameTimer++;
+
+        if (frameTimer > 10) {
+            frameAtual = (frameAtual + 1) % runFrames.length;
+            frameTimer = 0;
+        }
+        currentSprite = runFrames[frameAtual];
+    } else {
+        currentSprite = playerSprites.idle;
+    }
+
+    ctx.save();
+
+    if (ultimoLado === "left") {
+
+        ctx.scale(-1, 1);
+
+        ctx.drawImage(
+            currentSprite,
+            -player.x - player.width + offsetX,
+            player.y - 50,
+            player.renderwidth,
+            player.renderheight
+        );
+
+    } else {
+
+        ctx.drawImage(
+            currentSprite,
+            player.x + offsetX,
+            player.y - 50,
+            player.renderwidth,
+            player.renderheight
+        );
+    }
+    ctx.restore();
 }
 
 
@@ -1205,12 +1352,15 @@ function criarMiniMapa(ctx, canvas){
     // =========================
     // VARIÁVEIS
     // =========================
+    let mapaFrameTimer = 0;
+    let mapaFrameAtual = 0;
+    let mapaSpriteAtual = playerSprites.idle;
     let mapaAberto = false;
     let faseSelecionada = 0;
     const fases = [
-        { x: 90, y: 290 },
-        { x: 295, y: 290 },
-        { x: 500, y: 290 }
+        { x: 195, y: 290 },
+        { x: 595, y: 290 },
+        { x: 1000, y: 290 }
     ];
     let quadradoX = fases[0].x;
     let quadradoY = fases[0].y;
@@ -1218,7 +1368,7 @@ function criarMiniMapa(ctx, canvas){
     let destinoY = fases[0].y;
     // menor = mais suave
     // maior = mais rápido
-    const velocidadeMapa = 0.03;
+    const velocidadeMapa = 0.02;
     let movendoNoMapa = false;
     const imagemMapa = new Image();
     imagemMapa.src = "minimapa.png";
@@ -1261,15 +1411,26 @@ function criarMiniMapa(ctx, canvas){
 
     function updateMapa(){
 
-        // pega a distância entre o quadrado e o destino
-        // e move apenas uma parte dela por frame
-        // se estiver longe anda rápido
-        // se estiver perto desacelera sozinho
+        // animação andando no mapa
+        if (movendoNoMapa) {
+
+            mapaFrameTimer++;
+
+            if (mapaFrameTimer > 10) {
+                mapaFrameAtual = (mapaFrameAtual + 1) % runFrames.length;
+                mapaFrameTimer = 0;
+            }
+
+            mapaSpriteAtual = runFrames[mapaFrameAtual];
+
+        } else {
+            mapaSpriteAtual = playerSprites.idle;
+        }
+
         quadradoX += (destinoX - quadradoX) * velocidadeMapa;
         quadradoY += (destinoY - quadradoY) * velocidadeMapa;
+
         if(
-            // Math.abs remove números negativos
-            // ajuda a medir a distância real
             Math.abs(quadradoX - destinoX) < 1 &&
             Math.abs(quadradoY - destinoY) < 1
         ){
@@ -1294,12 +1455,12 @@ function criarMiniMapa(ctx, canvas){
             canvas.width,
             canvas.height
         );
-        ctx.fillStyle = "blue";
-        ctx.fillRect(
-            quadradoX,
-            quadradoY,
-            player.width * 0.8,
-            player.height * 0.8
+        ctx.drawImage(
+            mapaSpriteAtual,
+            quadradoX - 45,
+            quadradoY - 70,
+            150,
+            150
         );
         ctx.fillStyle = "white";
         ctx.font = "28px Arial";
@@ -1363,24 +1524,31 @@ function atualizar() {
     }
 
     // COLISÃO HORIZONTAL (nao deixa o player sair dos 230 pixeis pro background e o movimento ficarem dinamicos juntos)
-    if (!colisao(novoWorldX, player.y)) {
-        if (player.x < 230 || keys["ArrowLeft"]) {
-            player.x += (novoWorldX - worldX);
-        }
+if (!colisao(novoWorldX, player.y)) {
 
-        else if (keys["ArrowRight"]) {
-            // CAMERA AINDA PODE ANDAR (checka se a camera ainda pode se mover, se sim, move a camera, se não, move o player)
-            if (cameraX + canvas.width < levelWidth) {
-                cameraX += player.velX;
-            }
+    if (keys["ArrowRight"]) {
 
-            // FIM DO MAPA (player consegue se mover alem dos 230px quando chega no final do mapa)
-            else {
-                player.x += player.velX;
-            }
+        if (
+            player.x > 500 &&
+            cameraX + canvas.width < levelWidth
+        ) {
+            cameraX += player.velX;
+        } else {
+            player.x += player.velX;
         }
     }
 
+    if (keys["ArrowLeft"]) {
+        if (
+            player.x < 250 &&
+            cameraX > 0
+        ) {
+            cameraX -= player.velX;
+        } else {
+            player.x -= player.velX;
+        }
+    }
+}
     // PULO(só funciona se o player estiver "no chão", bugado pq da pra cair de uma plataforma e pular mas isso é segredo ;) )
     if (keys["ArrowUp"] && player.noChao) {
         player.velY = pulo;
@@ -1388,6 +1556,7 @@ function atualizar() {
     }
 
     // GRAVIDADE
+    player.noChao = false;
     player.velY += gravidade;
     let novoY = player.y + player.velY;
     //check de colisão do x em movimento do personagem e da camera e do novo y do personagem
@@ -1470,9 +1639,15 @@ function desenhar() {
 
         atualizar();
 
+
+
         desenharBackground();
-        desenharObstaculos();
         desenharPlayer();
+        
+        //debug
+        //desenharPlayerHitbox();
+        desenharObstaculos();
+        //desenharEnemiesHitbox();
 
         atualizarTiros();
         colisaoTiroEnemy();
@@ -1482,6 +1657,7 @@ function desenhar() {
 
         atualizarEnemies();
         desenharEnemies();
+ 
 
         desenharTiros();
         desenharFinal();

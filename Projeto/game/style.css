@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body{
+
+    margin:0;
+    height: 100vh;
+    display:flex;
+    justify-content:center;
+    background-size:cover;
+    background-position:center;
+    background-image:url("mario.webp");
+    background-repeat:no-repeat;
+    overflow:hidden;
+}
+
+.overlay{
+
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top:30px;
+    background:rgba(0,0,0,0.7);
+}
+
+
+canvas{
+
+    display: block;
+    border:4px solid black;
+    border-radius: 20px;
+    background:transparent;
+}
+
+.game-container{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+}
+
+.controls{
+
+    color:white;
+    font-family:"Press Start 2P",system-ui;
+    font-size:30px;
+    text-align:center;
+    margin-top: 40px;
+}
+
+.controls span{
+
+    color:yellow;
+    text-shadow:0 0 10px yellow;
+}
+
+.controls a{
+
+    color:rgb(255, 255, 255);
+    text-shadow:0 0 10px rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.controls a:hover{
+    color:yellow;
+    text-shadow:0 0 10px yellow;
+    text-decoration: underline;
+}
