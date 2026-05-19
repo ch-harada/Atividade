@@ -876,13 +876,58 @@ const levels = {
                 height: 40,
                 velX: 1,
                 direction: -1,
+            },
+        ],
+    },
+
+
+
+    3: {
+        background: "level3-3.png",
+        width: 10000,
+        height: 1260,
+        chao: 1000,
+        final:{
+            x: 500,
+            //x: 19140,
+            y: 760,
+            width: 60,
+            height: 80,
+        },
+
+        obstacles:[
+            {
+                x: 0,
+                y: 547,
+                width: 2309,
+                height: 340,
+            },
+            {
+                x:2080,
+                y:500,
+                width:80,
+                height:100,
             }
-        ]
-    }
-};
+        ],
+
+        inimigosOriginais:[
+            {
+                x: 1200,
+                y: 300,
+                spawnX: 1200,
+                spawnY: 500,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: -1,
+            },
+        ],
+    },
+}
+
 
 // CURRENT LEVEL (variáveis do level atual)
-let currentLevel = levels[levelatual];
+let currentLevel = levels[3];
 let obstacles = currentLevel.obstacles;
 let morte = currentLevel.morte;
 let levelWidth = currentLevel.width;
