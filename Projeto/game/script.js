@@ -19,7 +19,7 @@ let pontuacao = 0;
 let blocoL = 48;
 let blocoA = 45;
 
-let invulneravel = false;
+let invulneravel = true;
 
 let ultimoLado = "right";
 let tiros = [];
@@ -45,7 +45,8 @@ const levels = {
         height: 1270,
         chao: 600, 
         final: {
-            x: 9667,
+            x:400,
+            //x: 9667,
             y: 480,
             width: 50,
             height: 60,
@@ -649,8 +650,8 @@ const levels = {
         height: 1140,
         chao: 600,
         final:{
-            //x: 500,
-            x: 19140,
+            x: 500,
+            //x: 19140,
             y: 460,
             width: 60,
             height: 80,
@@ -784,9 +785,21 @@ const levels = {
                 height: 100,
             },
             {
+                x: 15820,
+                y: 547,
+                width: 100,
+                height: 100,
+            },
+            {
                 x: 15990,
                 y: 547,
                 width: 50,
+                height: 100,
+            },
+            {
+                x: 16075,
+                y: 547,
+                width: 100,
                 height: 100,
             },
             {
@@ -1016,14 +1029,175 @@ const levels = {
 
         inimigosOriginais: [
             {
-                x: 1200,
-                y: 300,
-                spawnX: 1200,
-                spawnY: 500,
+                x: 1260,
+                y: 500,
+                minX: 1260,
+                maxX: 1600,
                 width: 40,
                 height: 40,
-                velX: 1,
-                direction: -1,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 1930,
+                y: 500,
+                minX: 1930,
+                maxX: 2220,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 3260,
+                y: 500,
+                minX: 3260,
+                maxX: 3746,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 3913,
+                y: 500,
+                minX: 3913,
+                maxX: 4072,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 4260,
+                y: 500,
+                minX: 4260,
+                maxX: 4670,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 4841,
+                y: 500,
+                minX: 4841,
+                maxX: 4970,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 4980,
+                y: 500,
+                minX: 4980,
+                maxX: 5170,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 5354,
+                y: 500,
+                minX: 5345,
+                maxX: 5725,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 7760,
+                y: 500,
+                minX: 7760,
+                maxX: 8135,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 7750,
+                y: 160,
+                minX: 7750,
+                maxX: 8110,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+
+            {
+                x: 9245,
+                y: 500,
+                minX: 9245,
+                maxX: 9600,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 10150,
+                y: 500,
+                minX: 10150,
+                maxX: 10490,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 10600,
+                y: 500,
+                minX: 10600,
+                maxX: 10980,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 11440,
+                y: 500,
+                minX: 11440,
+                maxX: 11774,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 14155,
+                y: 500,
+                minX: 14155,
+                maxX: 14460,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 15241,
+                y: 500,
+                minX: 15241,
+                maxX: 15353,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 17330,
+                y: 500,
+                minX: 17330,
+                maxX: 17690,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
             },
         ],
     },
@@ -1036,7 +1210,8 @@ const levels = {
         height: 1260,
         chao: 1000,
         final:{
-            x:9720,
+            x:400,
+            //x:9720,
             y:460,
             width:45,
             height:85,
@@ -1202,7 +1377,7 @@ const levels = {
 
 
 // CURRENT LEVEL (variáveis do level atual)
-let currentLevel = levels[levelatual];
+let currentLevel = levels[3];
 let obstacles = currentLevel.obstacles;
 let morte = currentLevel.morte;
 let levelWidth = currentLevel.width;
@@ -1469,9 +1644,10 @@ function morrer() {
 
     player.noChao = false;
 
+
     if (vidas <= 0) {
-        resetarJogo();
-        return;
+    window.location.href = "../final/lost.html";
+    return;
     }
 
     setTimeout(() => {
@@ -1660,6 +1836,15 @@ function colisaoTiroObstacle() {
 
 function colisaoFinal() {
     let final = currentLevel.final;
+    if (levelatual == 3 && player.x + cameraX < final.x + final.width &&
+        player.x + cameraX + player.width > final.x &&
+        player.y < final.y + final.height &&
+        player.y + player.height > final.y
+    ){
+        localStorage.setItem("pontuacao", pontuacao);
+        localStorage.setItem("vidas", vidas);
+        window.location.href = "../final/win.html";
+    }
     if (
         player.x + cameraX < final.x + final.width &&
         player.x + cameraX + player.width > final.x &&
