@@ -4,7 +4,7 @@ var ctx = canvas.getContext("2d");
 const gravidade = 0.5;
 const pulo = -14;
 //armazena as teclas pressionadas, mto bolado pra movimentação fluida tlg
-const keys = {};
+var keys = {};
 
 //largura do cano
 const canoL = 95;
@@ -29,10 +29,12 @@ const cooldownTiro = 500;
 const enemySprites = {
     walk1: new Image(),
     walk2: new Image(),
+    zidle: new Image(),
 };
 
 enemySprites.walk1.src = "zrun1.png";
 enemySprites.walk2.src = "zrun1.5.png";
+enemySprites.zidle.src = "zidle.png";
 
 // LEVELS (background, obstáculos, largura e altura do level)
 const levels = {
@@ -43,7 +45,7 @@ const levels = {
         height: 1270,
         chao: 600, 
         final: {
-            x: 600,
+            x: 9667,
             y: 480,
             width: 50,
             height: 60,
@@ -471,8 +473,8 @@ const levels = {
             {
                 x: 500,
                 y: 500,
-                spawnX: 500,
-                spawnY: 500,
+                minX: 500,
+                maxX: 600,
                 width: 40,
                 height: 40,
                 velX: 1,
@@ -480,15 +482,161 @@ const levels = {
             },
 
             {
-                x: 1200,
+                x: 1100,
                 y: 500,
-                spawnX: 1200,
-                spawnY: 500,
+                minX: 1100,
+                maxX: 1200,
                 width: 40,
                 height: 40,
                 velX: 1,
                 direction: -1,
-            }
+            },
+
+            {
+                x: 962,
+                y: 330,
+                minX: 962,
+                maxX: 1150,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 1480,
+                y: 500,
+                minX: 1480,
+                maxX: 1700,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+
+            {
+                x: 1040,
+                y: 162,
+                minX: 1040,
+                maxX: 1040,
+                width: 40,
+                height: 40,
+                velX: 0,
+                direction: 1,
+            },
+
+            {
+                x: 1950,
+                y: 500,
+                minX: 1950,
+                maxX: 2100,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 2335,
+                y: 500,
+                minX: 2335,
+                maxX: 2485,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 2535,
+                y: 500,
+                minX: 2535,
+                maxX: 2635,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 2800,
+                y: 500,
+                minX: 2900,
+                maxX: 3200,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 3650,
+                y: 500,
+                minX: 3650,
+                maxX: 3824,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            
+            {
+                x: 3820,
+                y: 160,
+                minX: 3820,
+                maxX: 4100,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 5165,
+                y: 160,
+                minX: 5170,
+                maxX: 5170,
+                width: 40,
+                height: 40,
+                velX: 0,
+                direction: 1,
+            },
+
+            {
+                x: 5745,
+                y: 160,
+                minX: 5745,
+                maxX: 5860,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 6540,
+                y: 500,
+                minX: 6540,
+                maxX: 6600,
+                width: 40,
+                height: 40,
+                velX: 1,
+                direction: 1,
+            },
+
+            {
+                x: 7820,
+                y: 500,
+                minX: 7820,
+                maxX: 8440,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+
+
         ],
         
 
@@ -501,8 +649,8 @@ const levels = {
         height: 1140,
         chao: 600,
         final:{
-            x: 500,
-            //x: 19140,
+            //x: 500,
+            x: 19140,
             y: 460,
             width: 60,
             height: 80,
@@ -884,30 +1032,157 @@ const levels = {
 
     3: {
         background: "level3-3.png",
-        width: 10000,
+        width: 10050,
         height: 1260,
         chao: 1000,
         final:{
-            x: 500,
-            //x: 19140,
-            y: 760,
-            width: 60,
-            height: 80,
+            x:9720,
+            y:460,
+            width:45,
+            height:85,
         },
 
         obstacles:[
             {
                 x: 0,
                 y: 547,
-                width: 2309,
+                width: 2319,
                 height: 340,
             },
             {
-                x:2080,
-                y:500,
+                x: 2419,
+                y: 547,
+                width: 1941,
+                height: 340,
+            },
+            {
+                x: 4550,
+                y: 547,
+                width: 850,
+                height: 340,
+            },
+            {
+                x: 5500,
+                y: 547,
+                width: 1705,
+                height: 340,
+            },
+            {
+                x: 7350,
+                y: 547,
+                width: 2850,
+                height: 340,
+            },
+            {
+                x:2095,
+                y:420,
                 width:80,
-                height:100,
-            }
+                height:140,
+            },
+            {
+                x:2425,
+                y:420,
+                width:80,
+                height:140,
+            },
+            {
+                x:4220,
+                y:380,
+                width:45,
+                height:170,
+            },
+            {
+                x:4250,
+                y:380,
+                width:205,
+                height:40,
+            },
+            {
+                x:4265,
+                y:210,
+                width:145,
+                height:40,
+            },  
+            {
+                x:5500,
+                y:420,
+                width:45,
+                height:130,
+            },  
+            {
+                x:6970,
+                y:380,
+                width:45,
+                height:170,
+            }, 
+            {
+                x:6970,
+                y:380,
+                width:190,
+                height:45,
+            }, 
+            {
+                x:7395,
+                y:290,
+                width:95,
+                height:130,
+            }, 
+            {
+                x:7730,
+                y:465,
+                width:90,
+                height:85,
+            }, 
+            {
+                x:8628,
+                y:505,
+                width:45,
+                height:40,
+            }, 
+            {
+                x:8675,
+                y:460,
+                width:45,
+                height:90,
+            },
+            {
+                x:8725,
+                y:420,
+                width:45,
+                height:140,
+            },  
+            {
+                x:8770,
+                y:380,
+                width:45,
+                height:180,
+            },  
+            {
+                x:8818,
+                y:335,
+                width:45,
+                height:220,
+            },
+            {
+                x:8963,
+                y:210,
+                width:90,
+                height:250,
+            },
+            {
+                x:8628,
+                y:505,
+                width:45,
+                height:40,
+            },
+            {
+                x:9435,
+                y:505,
+                width:45,
+                height:40,
+            },  
+            
+            
         ],
 
         inimigosOriginais:[
@@ -927,20 +1202,27 @@ const levels = {
 
 
 // CURRENT LEVEL (variáveis do level atual)
-let currentLevel = levels[3];
+let currentLevel = levels[levelatual];
 let obstacles = currentLevel.obstacles;
 let morte = currentLevel.morte;
 let levelWidth = currentLevel.width;
 let levelHeight = currentLevel.height;
 let vidas = 3
 let levelChao = currentLevel.chao
-let enemies = structuredClone(currentLevel.inimigosOriginais);
 
-for (const enemy of enemies) {
-    enemy.frameTimer = 0;
-    enemy.frameAtual = 0;
-    enemy.currentSprite = enemySprites.walk1;
+function criarEnemies() {
+    let novosEnemies = structuredClone(currentLevel.inimigosOriginais);
+
+    for (const enemy of novosEnemies) {
+        enemy.frameTimer = 0;
+        enemy.frameAtual = 0;
+        enemy.currentSprite = enemySprites.walk1;
+    }
+
+    return novosEnemies;
 }
+
+let enemies = criarEnemies();
 
 
 
@@ -1049,20 +1331,22 @@ function desenharEnemies() {
 
     for (const enemy of enemies) {
 
-        // animação
-        enemy.frameTimer++;
-        if (enemy.frameTimer > 15) {
-            enemy.frameAtual =
-                (enemy.frameAtual + 1) % 2;
-
-            enemy.frameTimer = 0;
-        }
-
-        // troca sprite
-        if (enemy.frameAtual === 0) {
-            enemy.currentSprite = enemySprites.walk1;
+        if (enemy.minX === enemy.maxX) {
+            enemy.currentSprite = enemySprites.zidle;
         } else {
-            enemy.currentSprite = enemySprites.walk2;
+            // animação
+            enemy.frameTimer++;
+            if (enemy.frameTimer > 15) {
+                enemy.frameAtual =
+                    (enemy.frameAtual + 1) % 2;
+                enemy.frameTimer = 0;
+            }
+            // troca sprite
+            if (enemy.frameAtual === 0) {
+                enemy.currentSprite = enemySprites.walk1;
+            } else {
+                enemy.currentSprite = enemySprites.walk2;
+            }
         }
 
         ctx.save();
@@ -1095,24 +1379,17 @@ function desenharEnemies() {
 function atualizarEnemies() {
     for (const enemy of enemies) {
         let screenX = enemy.x - cameraX;
-        let minX = enemy.spawnX;
-        let maxX = enemy.spawnX + 100;
-        // only update near screen
         if (
             screenX > -200 &&
             screenX < canvas.width + 200
         ) {
-
-            // move
             enemy.x += enemy.velX * enemy.direction;
-
-            // hit right limit
-            if (enemy.x >= maxX) {
+            // right limit
+            if (enemy.x >= enemy.maxX) {
                 enemy.direction = -1;
             }
-
-            // hit left limit
-            if (enemy.x <= minX) {
+            // left limit
+            if (enemy.x <= enemy.minX) {
                 enemy.direction = 1;
             }
         }
@@ -1125,7 +1402,7 @@ function carregarLevel(numero) {
     levelatual = numero;
     currentLevel = levels[levelatual];
     obstacles = currentLevel.obstacles;
-    enemies = structuredClone(currentLevel.inimigosOriginais);
+    enemies = criarEnemies();
     morte = currentLevel.morte;
     levelWidth = currentLevel.width;
     levelHeight = currentLevel.height;
@@ -1152,7 +1429,7 @@ function resetarJogo() {
     // carrega level inicial
     carregarLevel(1);
     // reseta enemies
-    enemies = structuredClone(currentLevel.inimigosOriginais);;
+    enemies = criarEnemies();
     // player
     player.x = 50;
     player.y = 300;
@@ -1161,7 +1438,9 @@ function resetarJogo() {
     player.noChao = false;
     // câmera
     cameraX = 0;
+    keys = {};
     // fecha mapa se estiver aberto
+    miniMapa.faseSelecionada = 0;
     miniMapa.fecharMapa();
 }
 
@@ -1186,7 +1465,7 @@ function morrer() {
 
     tiros = [];
 
-    enemies = structuredClone(currentLevel.inimigosOriginais);
+    enemies = criarEnemies();
 
     player.noChao = false;
 
