@@ -77,6 +77,54 @@ body{
     font-size:16px;
 }
 
+.map-section{
+    margin-top:40px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.map-title{
+    color:yellow;
+    font-size:30px;
+    margin-bottom:25px;
+    text-shadow:0 0 10px yellow;
+}
+
+.small-cards{
+    display:flex;
+    gap:25px;
+}
+
+.small-card{
+    width:140px;
+    height:140px;
+    background:rgba(0,0,0,0.7);
+    border:3px solid yellow;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    transition:0.3s ease;
+}
+
+.small-card:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 20px yellow;
+}
+
+.small-card h2{
+    color:yellow;
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+.small-card p{
+    color:white;
+    font-size:12px;
+}
+
 .back-btn{
     margin-top:70px;
     text-decoration:none;
