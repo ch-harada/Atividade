@@ -19,7 +19,7 @@ let pontuacao = 0;
 let blocoL = 48;
 let blocoA = 45;
 
-let invulneravel = true;
+let invulneravel = false;
 
 let ultimoLado = "right";
 let tiros = [];
@@ -45,8 +45,7 @@ const levels = {
         height: 1270,
         chao: 600, 
         final: {
-            x:400,
-            //x: 9667,
+            x: 9667,
             y: 480,
             width: 50,
             height: 60,
@@ -650,8 +649,7 @@ const levels = {
         height: 1140,
         chao: 600,
         final:{
-            x: 500,
-            //x: 19140,
+            x: 19140,
             y: 460,
             width: 60,
             height: 80,
@@ -1210,8 +1208,7 @@ const levels = {
         height: 1260,
         chao: 1000,
         final:{
-            x:400,
-            //x:9720,
+            x:9720,
             y:460,
             width:45,
             height:85,
@@ -1362,22 +1359,205 @@ const levels = {
 
         inimigosOriginais:[
             {
-                x: 1200,
-                y: 300,
-                spawnX: 1200,
-                spawnY: 500,
+                x: 1405,
+                y: 500,
+                minX: 1080,
+                maxX: 1500,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 2200,
+                y: 500,
+                minX: 2175,
+                maxX: 2290,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 2730,
+                y: 500,
+                minX: 2530,
+                maxX: 3290,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 2730,
+                y: 500,
+                minX: 2530,
+                maxX: 3940,
+                width: 40,
+                height: 40,
+                velX: 5,
+                direction: 1,
+            },
+            {
+                x: 3640,
+                y: 500,
+                minX: 3240,
+                maxX: 3940,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 4315,
+                y: 325,
+                minX: 4240,
+                maxX: 4390,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 4310,
+                y: 500,
+                minX: 4280,
+                maxX: 4330,
+                width: 40,
+                height: 40,
+                velX: 0.5,
+                direction: 1,
+            },
+            {
+                x: 4310,
+                y: 155,
+                minX: 4260,
+                maxX: 4350,
+                width: 40,
+                height: 40,
+                velX: 1.5,
+                direction: 1,
+            },
+            {
+                x: 4975,
+                y: 500,
+                minX: 4570,
+                maxX: 5070,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 4975,
+                y: 500,
+                minX: 4600,
+                maxX: 5360,
+                width: 40,
+                height: 40,
+                velX: 4,
+                direction: 1,
+            },
+            {
+                x: 6000,
+                y: 500,
+                minX: 5890,
+                maxX: 6360,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 6000,
+                y: 500,
+                minX: 6090,
+                maxX: 6860,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 7060,
+                y: 325,
+                minX: 6980,
+                maxX: 7130,
+                width: 40,
+                height: 40,
+                velX: 2.5,
+                direction: 1,
+            },
+            {
+                x: 7040,
+                y: 500,
+                minX: 7020,
+                maxX: 7180,
+                width: 40,
+                height: 40,
+                velX: 1.5,
+                direction: 1,
+            },
+            {
+                x: 7040,
+                y: 500,
+                minX: 7020,
+                maxX: 7180,
+                width: 40,
+                height: 40,
+                velX: 0.5,
+                direction: 1,
+            },
+            {
+                x: 7425,
+                y: 245,
+                minX: 7400,
+                maxX: 7470,
                 width: 40,
                 height: 40,
                 velX: 1,
-                direction: -1,
+                direction: 1,
             },
+            {
+                x: 7535,
+                y: 500,
+                minX: 7355,
+                maxX: 7680,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+            {
+                x: 7860,
+                y: 500,
+                minX: 7840,
+                maxX: 8580,
+                width: 40,
+                height: 40,
+                velX: 3,
+                direction: 1,
+            },
+            {
+                x: 9000,
+                y: 165,
+                minX: 8960,
+                maxX: 9030,
+                width: 40,
+                height: 40,
+                velX: 2,
+                direction: 1,
+            },
+
+            
+           
         ],
     },
 }
 
 
 // CURRENT LEVEL (variáveis do level atual)
-let currentLevel = levels[3];
+let currentLevel = levels[levelatual];
 let obstacles = currentLevel.obstacles;
 let morte = currentLevel.morte;
 let levelWidth = currentLevel.width;
@@ -2155,8 +2335,9 @@ function desenhar() {
         
         //debug
         //desenharPlayerHitbox();
-        desenharObstaculos();
+        //desenharObstaculos();
         //desenharEnemiesHitbox();
+        //desenharFinal();
 
         atualizarTiros();
         colisaoTiroEnemy();
@@ -2169,7 +2350,7 @@ function desenhar() {
  
 
         desenharTiros();
-        desenharFinal();
+
     }
     requestAnimationFrame(desenhar);
 }
@@ -2195,15 +2376,15 @@ document.addEventListener("keyup", function(evento) {
 
 
 // DEBUG pra saber a posição do player e do mundo pra colocar os obstáculos no lugar "certo"
-document.addEventListener("keydown", function(evento) {
-    keys[evento.key] = true;
+//document.addEventListener("keydown", function(evento) {
+    //keys[evento.key] = true;
     // aperta enter que vai dar console log de tudo isso ai ;)
-    if (evento.key == "Enter") {
-        console.log("Player X:", player.x);
-        console.log("Player Y:", player.y);
-        console.log("World X:", player.x + cameraX);
-    }
-});
+   //if (evento.key == "Enter") {
+       // console.log("Player X:", player.x);
+        //console.log("Player Y:", player.y);
+        //console.log("World X:", player.x + cameraX);
+    //}
+//});
 
 
 // chama o loop do game pra iniciar tudo, é só ler a função desenhar que tem tudo explicado lá BUCETA
